@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <title>SCC | Candle Shop</title>
+    </head>
+    <script language="JavaScript">
+        <!-- code starts here -->
+        $(document).ready(function () {
+            listing();
+        });
+        /TO FETCH DATA FROM DATABASE /
+        function listing() {
+            $.ajax({
+                type: 'GET',
+                url: '/movie',
+                data: {},
+                success: function (response) {
+                    const movies = response['movies']
+                    for (let i = 1; i < movies.length; i++) {
+                        const movie = movies[i]
+                        const title = movie['name']
+                        const qtitle = movie['quantity']
+                        const ntitle = movie['number']
+                        const atitle = movie['address']
+                        var row = `<tr style="text-align:center">
+                        <td>${i}</td>
+                        <td>${title}</td>
+                        <td>${qtitle}</td>
+                        <td>${ntitle}</td>
+                        <td>${atitle}</td>
+                </tr>`
+                        $('#UNO').append(row)
+                    }
+                }
+            }
+            )
+        }
+        /TO CHECK FOR VALID INPUT AND SEND THOSE DATA TO BACKEND /
+        function posting() {
+            const userName = $('#Username').val()
+            const userQuantity = $('#Quantity').val()
+            const userNumber = $('#Number').val()
+            const userAddress = $('#Address').val()
+            if (userName == "") {
+                alert("Please fill out name")
+                $("#Username").focus()
+                return
+            } else if (userQuantity == "") {
+                alert("Please fill out quantity")
+                $("#Quantity").focus()
+                return
+            } else if (userAddress == "") {
+                alert("Please fill out address")
+                $("#Address").focus()
+                return
+            } else if (userNumber == "") {
+                alert("Please fill out phone number")
+                $("#Number").focus()
+                return
+            } else {
+                swal("Your order is complete!", "Thank you!", "success");
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/movie',
+                data: {
+                    'name': userName,
+                    'quantity': userQuantity,
+                    'number': userNumber,
+                    'address': userAddress,
+                },
+                success: function (response) {
+                    / TO RELOAD THE PAGE/
+                    setTimeout(() => { window.location.reload(); }, 3000);
+                }
+            });
+        }
+    </script>
+    <!-- Basic Styling -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=MuseoModerno:wght@200;300;700&display=swap');
+        /* Reset the default values */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: MuseoModerno, sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-content: center;
+            flex-wrap: wrap;
+        }
+        .main {
+            display: block;
+            width: 700px;
+            margin-top: 150px;
+            padding-left: 350px;
+            padding-bottom: 50px;
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+        }
+        img {
+            width: 100%;
+            height: 40%;
+            margin-bottom: 6px;
+        }
+        h1 {
+            display: inline;
+            font-size: 25px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        /* Span is  an inline element to inorder to set paragraph element below we use clear:both */
+        p {
+            clear: both;
+            margin: 11px auto;
+        }
+        button {
+            width: 110px;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-top: 20px;
+            background-color: #3A86FF;
+            color: white;
+            cursor: pointer;
+        }
+        h5 {
+            padding-left: 40px;
+            font-size: 30px;
+        }
+        .mb-2,
+        .my-2 {
+            margin-bottom: 1rem !important;
+        }
+        .input-group>.input-group-append:last-child>.btn:not(:last-child):not(.dropdown-toggle),
+        .input-group>.input-group-append:last-child>.input-group-text:not(:last-child),
+        .input-group>.input-group-append:not(:last-child)>.btn,
+        .input-group>.input-group-append:not(:last-child)>.input-group-text,
+        .input-group>.input-group-prepend>.btn,
+        .input-group>.input-group-prepend>.input-group-text {
+            font-weight: 600;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+    </style>
+    <body>
+        <div class="main">
+            <img src="static/images/glass c1.jpg" alt="Candle">
+            <h1>Sparta Candles</h1><span>Price:$3 each</span>
+            <p>These candles actually have special power!</p>
+            <form onsubmit="function1()">
+                <!-- To take the username -->
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="Username">Your name</label>
+                    </div>
+                    <input type="text" class="form-control" id="Username" name="Username" required>
+                </div>
+                <!-- To take the quantity -->
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="Quantity"> Quantity </label>
+                    </div>
+                    <input type="number" class="form-control" id="Quantity" placeholder="-- Please Select Quantity --"
+                        required min="1" name="Quantity">
+                </div>
+                <!-- To take the address -->
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="Address"> Address</label>
+                    </div>
+                    <input type="text" class="form-control" id="Address" name="Address" required>
+                </div>
+                <!-- To take phone number -->
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="Number"> Phone number</label>
+                    </div>
+                    <input type="text" class="form-control" id="Number" pattern="[0-9]{10,}" name="Number"
+                        title="Please Enter Your 10 Digit Number" required>
+                </div>
+                <button type="button" onclick="posting()">Order</button>
+            </form>
+        </div>
+        <div>
+        </div>
+        <div style="display: block;width:1000px;">
+            <table class="table">
+                <tbody id="UNO">
+                    <tr style="background-color: black; color:white; text-align:center">
+                        <td>No.</td>
+                        <td>Name</td>
+                        <td>Quantity</td>
+                        <td>Number</td>
+                        <td>Address</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+    </html>
